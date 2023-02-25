@@ -13,6 +13,12 @@ class ServiceProvider extends AddonServiceProvider
             \Statamic\Entries\Collection::class,
             \Doefom\Restrict\Entries\Collection::class
         );
+
+//        $this->app->bind(
+//            \Statamic\Fieldtypes\Entries::class,
+//            \Doefom\Restrict\Fieldtypes\Entries::class
+//        );
+
     }
 
     public function bootAddon()
