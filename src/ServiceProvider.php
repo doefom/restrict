@@ -2,11 +2,18 @@
 
 namespace Doefom\Restrict;
 
+use Doefom\Restrict\Policies\EntryPolicy;
+use Statamic\Entries\Entry;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
+
+    protected $policies = [
+        Entry::class => EntryPolicy::class,
+    ];
+
     public function register()
     {
 
