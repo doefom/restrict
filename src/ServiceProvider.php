@@ -9,15 +9,16 @@ class ServiceProvider extends AddonServiceProvider
 {
     public function register()
     {
+
         $this->app->bind(
             \Statamic\Entries\Collection::class,
             \Doefom\Restrict\Entries\Collection::class
         );
 
-//        $this->app->bind(
-//            \Statamic\Fieldtypes\Entries::class,
-//            \Doefom\Restrict\Fieldtypes\Entries::class
-//        );
+        $this->app->bind(
+            \Statamic\Fieldtypes\Entries::class,
+            \Doefom\Restrict\Fieldtypes\Entries::class
+        );
 
     }
 
