@@ -1,0 +1,19 @@
+{
+    "name": "doefom/restrict",
+    "autoload": {
+        "psr-4": {
+            "Doefom\\Restrict\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Restrict",
+            "description": "Restrict addon"
+        },
+        "laravel": {
+            "providers": [
+                "Doefom\\Restrict\\ServiceProvider"
+            ]
+        }
+    }
+}
