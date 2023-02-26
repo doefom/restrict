@@ -2,6 +2,8 @@
 
 namespace Doefom\tests\Feature;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 class CollectionTest extends \Doefom\tests\BaseTestCase
 {
 
@@ -12,7 +14,9 @@ class CollectionTest extends \Doefom\tests\BaseTestCase
      */
     public function test_user_cannot_view_other_authors_entries()
     {
-        $response = $this->get('/');
+        $response = $this->actingAs($this->authorB)
+            ->withSession(['banned' => false])
+            ->get('/cp/collections');
 
         $response->assertStatus(200);
     }

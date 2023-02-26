@@ -39,12 +39,12 @@ class BaseTestCase extends \Tests\TestCase
         $this->collectionA = $this->createCollection('A');
         $this->collectionB = $this->createCollection('B');
 
-        $this->authorA = $this->createUser();
+        $this->authorA = $this->createUser(); // Note: User A has entries but has no permissions (e.g. cannot access cp)
         $this->authorB = $this->createUser();
         $this->superAdmin = $this->createUser(true);
 
-        $this->roleViewOtherAuthorsEntriesCollectionA = Role::make()->addPermission("view other author's {$this->collectionA->handle()} entries");
-        $this->authorB->assignRole($this->roleViewOtherAuthorsEntriesCollectionA);
+        $this->roleViewOtherAuthorsEntriesCollectionA = $this->createRole("ViewOtherAuthorsEntriesCollectionA", $this->collectionA);
+        $this->authorB->assignRole($this->roleViewOtherAuthorsEntriesCollectionA->handle());
 
         $this->blueprintA = $this->createBlueprint('default', $this->collectionA);
         $this->blueprintB = $this->createBlueprint('default', $this->collectionB);
@@ -103,6 +103,20 @@ class BaseTestCase extends \Tests\TestCase
         $user->save();
 
         return $user;
+    }
+
+    public function createRole(string $title, \Statamic\Contracts\Entries\Collection $collection)
+    {
+        $role = Role::make()
+            ->handle(Str::lower($title))
+            ->title($title)
+            ->addPermission("access cp")
+            ->addPermission("view {$collection->handle()} entries")
+            ->addPermission("view other author's {$collection->handle()} entries");
+
+        $role->save();
+
+        return $role;
     }
 
     public function createBlueprint(string $title, \Statamic\Contracts\Entries\Collection $collection)
