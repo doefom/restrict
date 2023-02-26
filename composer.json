@@ -2,7 +2,8 @@
     "name": "doefom/restrict",
     "autoload": {
         "psr-4": {
-            "Doefom\\Restrict\\": "src"
+            "Doefom\\Restrict\\": "src",
+            "Doefom\\tests\\": "tests"
         }
     },
     "extra": {
