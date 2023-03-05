@@ -2,9 +2,20 @@
     "name": "doefom/restrict",
     "autoload": {
         "psr-4": {
-            "Doefom\\Restrict\\": "src",
-            "Doefom\\tests\\": "tests"
+            "Doefom\\Restrict\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Doefom\\Restrict\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "statamic/cms": "3.2.* || 3.3.* || 3.4.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "orchestra/testbench": "^7.0"
     },
     "extra": {
         "statamic": {
@@ -15,6 +26,11 @@
             "providers": [
                 "Doefom\\Restrict\\ServiceProvider"
             ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
         }
     }
 }
