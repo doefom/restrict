@@ -11,7 +11,7 @@ class CollectionTest extends TestCase
     public function user_a_can_see_other_authors_entries_of_collection_a()
     {
         $this->actingAs($this->userA);
-        $this->assertEquals(2, $this->collectionA->queryEntries()->count());
+        $this->assertEquals(3, $this->collectionA->queryEntries()->count());
     }
 
     /** @test */
@@ -19,6 +19,13 @@ class CollectionTest extends TestCase
     {
         $this->actingAs($this->userB);
         $this->assertEquals(1, $this->collectionA->queryEntries()->count());
+    }
+
+    /** @test */
+    public function user_c_can_see_all_entries_of_collection_a()
+    {
+        $this->actingAs($this->userC);
+        $this->assertEquals(3, $this->collectionA->queryEntries()->count());
     }
 
 }

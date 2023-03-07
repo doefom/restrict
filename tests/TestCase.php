@@ -25,8 +25,10 @@ abstract class TestCase extends OrchestraTestCase
     public \Statamic\Contracts\Auth\Role $roleB;
     public \Statamic\Contracts\Auth\User $userA;
     public \Statamic\Contracts\Auth\User $userB;
+    public \Statamic\Contracts\Auth\User $userC;
     public \Statamic\Entries\Entry $entryAUserA; // Entry in collection A with author user A
     public \Statamic\Entries\Entry $entryAUserB; // Entry in collection A with author user B
+    public \Statamic\Entries\Entry $entryAUserC; // Entry in collection A with author user C
 
     public function setup(): void
     {
@@ -139,15 +141,18 @@ abstract class TestCase extends OrchestraTestCase
      * - Has one own entry in collection A
      * - Has one own entry in collection B
      *
+     * User C:
+     * - Is super user and can see everything
+     *
      * @return void
      */
     public function createSetupData()
     {
-        // Create blueprint
+        // Create blueprints
         $this->blueprintA = $this->createBlueprintFromFixtures('/blueprints/collections/a/a.yaml');
         $this->blueprintB = $this->createBlueprintFromFixtures('/blueprints/collections/b/b.yaml');
 
-        // Create collection
+        // Create collections
         $this->collectionA = Collection::make('a')->save();
         $this->collectionB = Collection::make('b')->save();
 
@@ -190,6 +195,16 @@ abstract class TestCase extends OrchestraTestCase
         $this->userB->assignRole($this->roleB);
         $this->userB->save();
 
+        // Create user C (Super User)
+        $this->userC = User::make()
+            ->data([
+                'name' => 'User C',
+                'email' => 'c@example.org',
+                'password' => 'c',
+                'super' => true,
+            ]);
+        $this->userC->save();
+
         // Create entry for user A in collection A
         $this->entryAUserA = Entry::make()
             ->collection($this->collectionA->handle())
@@ -209,6 +224,16 @@ abstract class TestCase extends OrchestraTestCase
                 'author' => $this->userB->id
             ]);
         $this->entryAUserB->save();
+
+        // Create entry for user C in collection A
+        $this->entryAUserC = Entry::make()
+            ->collection($this->collectionA->handle())
+            ->blueprint($this->blueprintA->handle())
+            ->data([
+                'title' => "Test",
+                'author' => $this->userC->id
+            ]);
+        $this->entryAUserC->save();
     }
 
 }
