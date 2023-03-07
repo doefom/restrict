@@ -1,5 +1,6 @@
 {
     "name": "doefom/restrict",
+    "description": "Restrict is a Statamic addon that adds permissions for collections to limit entry listings to the author of an entry within a given collection.",
     "autoload": {
         "psr-4": {
             "Doefom\\Restrict\\": "src"
