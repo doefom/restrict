@@ -15,8 +15,8 @@ class Entries extends \Statamic\Fieldtypes\Entries
         $query = parent::getIndexQuery($request);
 
         foreach ($this->getConfiguredCollections() as $collectionHandle) {
-            // If the user has permission to view other author's entries for the given collection, do nothing.
-            if (User::current()->isSuper() || User::current()->hasPermission("view other author's $collectionHandle entries")) {
+            // If the user has permission to view other authors' entries for the given collection, do nothing.
+            if (User::current()->isSuper() || User::current()->hasPermission("view other authors' $collectionHandle entries")) {
                 continue;
             }
             // Else, get all entries of the given collection that do not belong to the current user.

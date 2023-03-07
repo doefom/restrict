@@ -127,22 +127,22 @@ abstract class TestCase extends OrchestraTestCase
      * This function creates the following data:
      * - Two blueprints (that both have an 'author' field type)
      * - Two collections (with one blueprint each)
-     * - Two roles, where role A can view other author's collection entries but role B can view own entries only
+     * - Two roles, where role A can view other authors' collection entries but role B can view own entries only
      * - Two users, where user A is assigned role A and user B is assigned role B
      * - Two entries (one for each collection)
      *
      * User A:
-     * - Can view other author's entries in collection A
+     * - Can view other authors' entries in collection A
      * - Has one own entry in collection A
      * - Has one own entry in collection B
      *
      * User B:
-     * - Cannot view other author's entries in collection A
+     * - Cannot view other authors' entries in collection A
      * - Has one own entry in collection A
      * - Has one own entry in collection B
      *
      * User C:
-     * - Is super user and can see everything
+     * - Is super admin and can see everything
      *
      * @return void
      */
@@ -156,13 +156,13 @@ abstract class TestCase extends OrchestraTestCase
         $this->collectionA = Collection::make('a')->save();
         $this->collectionB = Collection::make('b')->save();
 
-        // Create role - View other author's collection entries
+        // Create role - View other authors' collection entries
         $this->roleA = Role::make()
             ->handle('a')
             ->title('A')
             ->addPermission("access cp")
             ->addPermission("view {$this->collectionA->handle()} entries")
-            ->addPermission("view other author's {$this->collectionA->handle()} entries");
+            ->addPermission("view other authors' {$this->collectionA->handle()} entries");
         $this->roleA->save();
 
         // Create role - View own collection entries only

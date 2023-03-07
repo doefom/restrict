@@ -2,8 +2,6 @@
 
 namespace Doefom\Restrict;
 
-use Doefom\Restrict\Policies\EntryPolicy;
-use Statamic\Entries\Entry;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -11,7 +9,7 @@ class ServiceProvider extends AddonServiceProvider
 {
 
     protected $policies = [
-        Entry::class => EntryPolicy::class,
+        \Statamic\Entries\Entry::class => \Doefom\Restrict\Policies\EntryPolicy::class,
     ];
 
     public function register()
@@ -33,8 +31,8 @@ class ServiceProvider extends AddonServiceProvider
     {
         Permission::extend(function () {
             Permission::get("view {collection} entries")->addChild(
-                Permission::make("view other author's {collection} entries")
-                    ->label("View other author's entries")
+                Permission::make("view other authors' {collection} entries")
+                    ->label("View other authors' entries")
             );
         });
     }
