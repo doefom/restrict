@@ -60,6 +60,6 @@ public function register()
 }
 ```
 
-All of those classes extend the respective original class and perform minor changes on it. If you were to override one
-or more of those classes yourself or use another addon which rebinds one or more of those, you might run into issues.
-That's just something to keep in mind when using this addon.
+All of those classes extend the respective original class and perform minor changes on it. If you were to override or
+use another addon which rebinds one or more of those classes, you might run into issues. That's just something to keep in mind
+when using this addon.
