@@ -1,6 +1,6 @@
 # Restrict
 
-> Restrict is a Statamic addon that adds a permissions for collections to limit entry listings to the author of an
+> Restrict is a Statamic addon that adds permissions for collections to limit entry listings to the author of an
 > entry within a given collection.
 
 ## Features
