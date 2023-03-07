@@ -11,7 +11,7 @@ class Collection extends \Statamic\Entries\Collection
     {
         $user = User::current();
 
-        if (!$user || $user->isSuper() || $user->hasPermission("view other author's $this->handle entries")) {
+        if (!$user || $user->isSuper() || $user->hasPermission("view other author's {$this->handle()} entries")) {
             return parent::queryEntries();
         }
 
