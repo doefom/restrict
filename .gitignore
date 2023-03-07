@@ -1,4 +1,7 @@
 node_modules
 vendor
 mix-manifest.json
+
+phpunit.xml.dist.bak
 .DS_Store
+.phpunit.result.cache
