@@ -37,6 +37,8 @@ that collection does not have an `author` field, the entry cannot be viewed unle
 
 ## Caveats
 
+### Class Bindings
+
 _Restrict_ works by overriding and rebinding some classes in the addon's ServiceProvider:
 
 ```php
@@ -63,3 +65,9 @@ public function register()
 All of those classes extend the respective original class and perform minor changes on it. If you were to override or
 use another addon which rebinds one or more of those classes, you might run into issues. That's just something to keep in mind
 when using this addon.
+
+## Further Notes
+
+### REST API
+
+The addon does not affect Statamic's REST API. Therefore all entries will be visible to any user if the API is enabled.
