@@ -8,8 +8,8 @@ Restrict entry listings from being visible to other authors in the control panel
 useful when not every user in the control panel can view all entries of collections they're permitted to view.
 That's when _Restrict_ comes in.
 
-By default a user, that's not a super admin, can only see the entries they've created themselves. Choose for which
-collections a user is able to view all entries within the collection.
+After installing the addon, by default a user (who is not a super admin), can only see the entries they've created themselves. Choose for which
+collections a user is able to view all entries within the collection by checking the checkboxes in the control panel.
 
 A user will be able to view an entry when one of the following is true:
 
