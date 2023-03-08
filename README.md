@@ -35,7 +35,6 @@ Therefore, if the permission `View other authors' entries` is not granted for a 
 that collection does not have an `author` field, the entry cannot be viewed unless you're a super admin.
 
 ## Caveats
-
 ### Class Bindings
 
 _Restrict_ works by overriding and rebinding some classes in the addon's ServiceProvider:
@@ -66,7 +65,6 @@ use another addon which rebinds one or more of those classes, you might run into
 when using this addon.
 
 ## Further Notes
-
 ### REST API
 
 The addon does not affect Statamic's REST API. Therefore all entries will be visible to any user if the API is enabled.
