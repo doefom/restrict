@@ -35,5 +35,6 @@
         "allow-plugins": {
             "pixelfear/composer-dist-plugin": true
         }
-    }
+    },
+    "license": "MIT"
 }
