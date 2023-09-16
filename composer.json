@@ -1,7 +1,7 @@
 {
     "name": "doefom/restrict",
     "description": "Restrict is a Statamic addon that lets you choose from which collection a user can view other authors' entries.",
-    "version": "v0.0.1",
+    "version": "0.1.0",
     "autoload": {
         "psr-4": {
             "Doefom\\Restrict\\": "src"
@@ -13,7 +13,7 @@
         }
     },
     "require": {
-        "statamic/cms": "3.2.* || 3.3.* || 3.4.*"
+        "statamic/cms": "^v4.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.5.1",
