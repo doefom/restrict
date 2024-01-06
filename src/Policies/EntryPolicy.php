@@ -13,7 +13,7 @@ class EntryPolicy extends \Statamic\Policies\EntryPolicy
     {
         // If user cannot view other authors' entries, check if the entry belongs to the current user.
         if (!$user->isSuper() && !$user->hasPermission("view other authors' {$entry->collectionHandle()} entries")) {
-            return $user->id === $entry->get('author');
+            return $user->id === $entry->augmentedValue('author')?->raw();
         }
 
         // Else continue with the default permissions
