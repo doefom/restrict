@@ -2,9 +2,9 @@
 
 namespace Doefom\Restrict\Stache\Query;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Statamic\Entries\EntryCollection;
+use Illuminate\Support\Facades\Route;
+use Statamic\Entries\Entry;
 use Statamic\Facades\User;
 use Statamic\Stache\Query\EntryQueryBuilder as StatamicEntryQueryBuilder;
 use Statamic\Support\Str;
@@ -14,76 +14,51 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
 
     protected function getFilteredKeys()
     {
-        $collections = empty($this->collections)
-            ? \Statamic\Facades\Collection::handles()
-            : $this->collections;
+        $resKeys = parent::getFilteredKeys();
 
-        $this->addTaxonomyWheres();
-
-        $unauthorizedCollections = $this->filterUnauthorizedCollections($collections);
-
-        if (empty($unauthorizedCollections)) {
-            return empty($this->wheres)
-                ? $this->getKeysFromCollections($collections)
-                : $this->getKeysFromCollectionsWithWheres($collections, $this->wheres);
-        } else {
-            $authorizedCollections = $this->filterAuthorizedCollections($collections);
-
-            $resAuthorized = empty($this->wheres)
-                ? $this->getKeysFromCollections($authorizedCollections)
-                : $this->getKeysFromCollectionsWithWheres($authorizedCollections, $this->wheres);
-
-            $wheres = $this->wheres;
-            $wheres[] = $this->getAuthorWhere();
-
-            $resUnauthorized = $this->getKeysFromCollectionsWithWheres($unauthorizedCollections, $wheres);
-
-            return $resAuthorized->merge($resUnauthorized);
+        // Ony apply the restriction if:
+        // 1. The current route is a CP route that requires authentication
+        // 2. The current user is not a super user
+        if (!$this->isAuthenticatedCpRoute() || User::current()?->isSuper()) {
+            return $resKeys;
         }
 
+        return $resKeys->filter(function ($key) {
+            $entry = $this->store->getItem($key);
+
+            return $this->isAuthorized($entry);
+        });
     }
 
-    private function getAuthorWhere(): array
+    /**
+     * Check if the current user is authorized to view the entry. This is done by checking if the user has permission to
+     * view other authors' entries in the entry's collection or if the user is the author of the entry.
+     *
+     * @param Entry $entry
+     * @return bool
+     */
+    protected function isAuthorized(Entry $entry): bool
     {
-        $user = User::current();
+        $authorizedCollections = $this->getAllAuthorizedCollections();
 
-        return [
-            'type' => 'Basic',
-            'column' => 'author',
-            'value' => $user->id(),
-            'operator' => '=',
-            'boolean' => 'and',
-        ];
+        $isInAuthorizedCollection = in_array($entry->collectionHandle(), $authorizedCollections);
+        $isAuthor = $entry->get('author') === User::current()->id();
+
+        return $isInAuthorizedCollection || $isAuthor;
     }
 
-    private function filterUnauthorizedCollections(array $collections): array
-    {
-        if (Auth::user()?->isSuper()) return [];
-
-        return collect($collections)
-            ->filter(fn($collection) => !$this->isAuthorizedCollection($collection))
-            ->values()
-            ->toArray();
-    }
-
-    private function filterAuthorizedCollections(array $collections): array
-    {
-        if (Auth::user()?->isSuper()) return $collections;
-
-        return collect($collections)
-            ->filter(fn($collection) => $this->isAuthorizedCollection($collection))
-            ->values()
-            ->toArray();
-    }
-
-    private function isAuthorizedCollection(string $collection): bool
-    {
-        return in_array($collection, $this->getAllAuthorizedCollections());
-    }
-
+    /**
+     * Get all collections that the current user is authorized to view other authors' entries in.
+     *
+     * @return array
+     */
     private function getAllAuthorizedCollections(): array
     {
         $user = User::current();
+
+        if (!$user) {
+            return [];
+        }
 
         return $user->permissions()
             ->filter(fn($permission) => Str::contains($permission, "view other authors'"))
@@ -92,6 +67,17 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
             })
             ->values()
             ->toArray();
+    }
+
+    /**
+     * Check if the current route is a CP route that requires authentication by checking if the
+     * 'statamic.cp.authenticated' middleware is applied to the route.
+     *
+     * @return bool
+     */
+    private function isAuthenticatedCpRoute(): bool
+    {
+        return in_array('statamic.cp.authenticated', Route::current()->gatherMiddleware());
     }
 
 }

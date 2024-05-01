@@ -5,7 +5,6 @@ namespace Doefom\Restrict;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
-use Statamic\Tags\Collection\Collection;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -17,6 +16,8 @@ class ServiceProvider extends AddonServiceProvider
             \Doefom\Restrict\Contracts\Entries\EntryRepository::class
         );
 
+        // Note: This is just a precaution, as the EntryRepository would already make sure that unauthorized entries
+        // are not returned in the first place and can therefore not be checked by the EntryPolicy.
         $this->app->bind(
             \Statamic\Policies\EntryPolicy::class,
             \Doefom\Restrict\Policies\EntryPolicy::class
