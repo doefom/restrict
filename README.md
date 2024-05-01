@@ -1,16 +1,26 @@
 # Restrict
 
-> Restrict is a Statamic addon that lets you choose from which collection a user can view other authors' entries.
+> Restrict is a Statamic addon that lets you choose which user can view other authors' entries of a given collection in
+> the control panel.
 
 - ✅ Statamic v4
 - ✅ Statamic API
 - ✅ Multisite
 - ❌ Eloquent Driver
 
+**Note:** Statamic Pro is required.
+
 ## Features
 
-Restrict entry listings from being visible to other authors in the control panel. There are times where it might be
-useful when not every user in the control panel can view all entries of a collections. That's where _Restrict_ comes in.
+Prevent users from viewing other authors' entries unless they have been explicitly authorized to do so.
+
+### Conditions to view an entry
+
+A user is able to view an entry when one of the following is true:
+
+- the user is a super admin
+- the field `author` of the entry matches the current user
+- the user's role has permission to `View other authors' entries` for the given collection
 
 ## How to Install
 
@@ -23,21 +33,18 @@ composer require doefom/restrict
 
 ## How to Use
 
-After installing the addon, by default a user (who is not a super admin), can only see the entries they've created
-themselves. The addon will add a "View other authors' entries" permission to each collection's permissions. You can
-allow a user to view other authors' entries by granting this permission for the respective collection for the user's
-role.
+### Default Behavior after Installation
 
-A user is able to view an entry when one of the following is true:
+The addon behaves very similar to Statamic's default permission to `Edit other authors' entries`
+(https://statamic.dev/users#author-permissions). It adds a new permission to each collection's permissions
+called `View other authors' entries`. After installing the addon, by default a user can only view entries they've
+created themselves.
 
-- the user is a super admin
-- the value of the field `author` of the entry matches the user's `id`
-- the user's role has permission to `View other authors' entries` for the given collection
+### Giving a User Permission to View Other Authors' Entries
 
-Matching the user's `id` with the `author` behaves the same way as required by Statamic's default permission to
-`Edit other authors' entries`.
-
-For more information visit: https://statamic.dev/users#author-permissions
+To give a user permission to view other authors' entries, you need to assign the permission to the user's role. You can
+do this in the control panel by navigating to "Permissions", selecting the role you want to edit, and checking the
+permission `View other authors' entries` for the collection you want to give permission for.
 
 ## Caveats
 
