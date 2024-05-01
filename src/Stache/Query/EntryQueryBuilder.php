@@ -16,7 +16,7 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
     {
         $resKeys = parent::getFilteredKeys();
 
-        // Ony apply the restriction if:
+        // Only apply the restriction if:
         // 1. The current route is a CP route that requires authentication
         // 2. The current user is not a super user
         if (!$this->isAuthenticatedCpRoute() || User::current()?->isSuper()) {
@@ -42,7 +42,7 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
         $authorizedCollections = $this->getAllAuthorizedCollections();
 
         $isInAuthorizedCollection = in_array($entry->collectionHandle(), $authorizedCollections);
-        $isAuthor = $entry->get('author') === User::current()->id();
+        $isAuthor = $entry->author?->id === User::current()->id();
 
         return $isInAuthorizedCollection || $isAuthor;
     }
