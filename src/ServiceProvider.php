@@ -4,31 +4,24 @@ namespace Doefom\Restrict;
 
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
+use Statamic\Tags\Collection\Collection;
 
 class ServiceProvider extends AddonServiceProvider
 {
 
-    protected $policies = [
-        \Statamic\Entries\Entry::class => \Doefom\Restrict\Policies\EntryPolicy::class,
-    ];
-
-    public function register()
+    public function bootAddon(): void
     {
-
-        $this->app->bind(
-            \Statamic\Entries\Collection::class,
-            \Doefom\Restrict\Entries\Collection::class
+        Statamic::repository(
+            \Statamic\Contracts\Entries\EntryRepository::class,
+            \Doefom\Restrict\Contracts\Entries\EntryRepository::class
         );
 
         $this->app->bind(
-            \Statamic\Fieldtypes\Entries::class,
-            \Doefom\Restrict\Fieldtypes\Entries::class
+            \Statamic\Policies\EntryPolicy::class,
+            \Doefom\Restrict\Policies\EntryPolicy::class
         );
 
-    }
-
-    public function bootAddon()
-    {
         Permission::extend(function () {
             Permission::get("view {collection} entries")->addChild(
                 Permission::make("view other authors' {collection} entries")

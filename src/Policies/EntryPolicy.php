@@ -2,22 +2,22 @@
 
 namespace Doefom\Restrict\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
 use Statamic\Facades\User;
+use Statamic\Policies\EntryPolicy as StatamicEntryPolicy;
 
-class EntryPolicy extends \Statamic\Policies\EntryPolicy
+class EntryPolicy extends StatamicEntryPolicy
 {
-    use HandlesAuthorization;
 
     public function view($user, $entry)
     {
-        // If user cannot view other authors' entries, check if the entry belongs to the current user.
-        if (!$user->isSuper() && !$user->hasPermission("view other authors' {$entry->collectionHandle()} entries")) {
-            return $user->id === $entry->get('author');
-        }
+        $user = User::fromUser($user);
 
-        // Else continue with the default permissions
-        return parent::view($user, $entry);
+        $default = parent::view($user, $entry);
+
+        $canViewOtherAuthorsEntries = $user->hasPermission("view other authors' {$entry->collectionHandle()} entries");
+        $isAuthorOfThisEntry = $entry->get('author') === $user->id();
+
+        return $default && ($isAuthorOfThisEntry || $canViewOtherAuthorsEntries);
     }
 
 }
