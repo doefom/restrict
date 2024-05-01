@@ -31,6 +31,11 @@ composer require doefom/restrict
 
 ## Caveats
 
+### Eloquent Driver
+
+This addon does **not** work with the Eloquent driver. It only works with the default flat file driver. However, it is 
+planned to support the Eloquent driver in the future.
+
 ### Class Bindings
 
 _Restrict_ works by overriding and rebinding some classes in the addon's ServiceProvider:
