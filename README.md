@@ -35,10 +35,10 @@ composer require doefom/restrict
 
 ### Default Behavior after Installation
 
-The addon behaves very similar to Statamic's default permission to `Edit other authors' entries`
-(https://statamic.dev/users#author-permissions). It adds a new permission to each collection's permissions
-called `View other authors' entries`. After installing the addon, by default a user can only view entries they've
-created themselves.
+The addon behaves very similar to Statamic's default permission
+to `Edit other authors' entries` ([https://statamic.dev/users#author-permissions](https://statamic.dev/users#author-permissions)).
+It adds a new permission to each collection's permissions called `View other authors' entries`. After installing the
+addon, by default a user can only view entries they've created themselves.
 
 ### Giving a User Permission to View Other Authors' Entries
 
