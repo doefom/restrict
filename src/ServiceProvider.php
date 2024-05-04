@@ -8,7 +8,6 @@ use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
-
     public function bootAddon(): void
     {
         Statamic::repository(
@@ -24,11 +23,10 @@ class ServiceProvider extends AddonServiceProvider
         );
 
         Permission::extend(function () {
-            Permission::get("view {collection} entries")->addChild(
+            Permission::get('view {collection} entries')->addChild(
                 Permission::make("view other authors' {collection} entries")
                     ->label("View other authors' entries")
             );
         });
     }
-
 }

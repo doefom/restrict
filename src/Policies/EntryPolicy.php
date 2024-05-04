@@ -7,7 +7,6 @@ use Statamic\Policies\EntryPolicy as StatamicEntryPolicy;
 
 class EntryPolicy extends StatamicEntryPolicy
 {
-
     public function view($user, $entry)
     {
         $user = User::fromUser($user);
@@ -20,5 +19,4 @@ class EntryPolicy extends StatamicEntryPolicy
 
         return $default;
     }
-
 }
