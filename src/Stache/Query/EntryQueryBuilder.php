@@ -23,6 +23,8 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
             return $resKeys;
         }
 
+
+        // Note: At this point, we know there is an authenticated user.
         return $resKeys->filter(function ($key) {
             $entry = $this->store->getItem($key);
 
@@ -39,12 +41,21 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
      */
     protected function isAuthorized(Entry $entry): bool
     {
+        // TODO: Check the entry blueprint, not each entry's content
+
+        $author = $entry->author;
+
+        // If the entry has no author, the addon has no effect.
+        if (!$author) {
+            return true;
+        }
+
         $authorizedCollections = $this->getAllAuthorizedCollections();
 
-        $isInAuthorizedCollection = in_array($entry->collectionHandle(), $authorizedCollections);
-        $isAuthor = $entry->author?->id === User::current()->id();
+        $isInAuthorizedCollections = in_array($entry->collectionHandle(), $authorizedCollections);
+        $isAuthor = $author->id() === User::current()->id();
 
-        return $isInAuthorizedCollection || $isAuthor;
+        return $isInAuthorizedCollections || $isAuthor;
     }
 
     /**
@@ -54,13 +65,7 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
      */
     private function getAllAuthorizedCollections(): array
     {
-        $user = User::current();
-
-        if (!$user) {
-            return [];
-        }
-
-        return $user->permissions()
+        return User::current()->permissions()
             ->filter(fn($permission) => Str::contains($permission, "view other authors'"))
             ->map(function ($permission) {
                 return Str::between($permission, "view other authors' ", " entries");
@@ -78,6 +83,15 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
     private function isAuthenticatedCpRoute(): bool
     {
         return in_array('statamic.cp.authenticated', Route::current()->gatherMiddleware());
+    }
+
+    private function hasAnotherAuthor($user, $entry)
+    {
+        if ($entry->blueprint()->hasField('author') === false) {
+            return false;
+        }
+
+        return ! $entry->authors()->contains($user->id());
     }
 
 }

@@ -14,10 +14,11 @@ class EntryPolicy extends StatamicEntryPolicy
 
         $default = parent::view($user, $entry);
 
-        $canViewOtherAuthorsEntries = $user->hasPermission("view other authors' {$entry->collectionHandle()} entries");
-        $isAuthorOfThisEntry = $entry->get('author') === $user->id();
+        if ($this->hasAnotherAuthor($user, $entry)) {
+            return $default && $user->hasPermission("view other authors' {$entry->collectionHandle()} entries");
+        }
 
-        return $default && ($isAuthorOfThisEntry || $canViewOtherAuthorsEntries);
+        return $default;
     }
 
 }

@@ -22,6 +22,10 @@ A user is able to view an entry when one of the following is true:
 - the field `author` of the entry matches the current user
 - the user's role has permission to `View other authors' entries` for the given collection
 
+### Important Note
+
+If your entry blueprint does not have an `author` field, the addon will have **no effect**.
+
 ## How to Install
 
 You can search for this addon in the `Tools > Addons` section of the Statamic control panel and click **install**, or
