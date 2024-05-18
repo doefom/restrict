@@ -4,6 +4,7 @@
 > the control panel.
 
 - ✅ Statamic v4
+- ✅ Statamic v5
 - ✅ Statamic API
 - ✅ Multisite
 - ❌ Eloquent Driver

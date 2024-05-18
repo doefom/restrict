@@ -7,7 +7,7 @@
         }
     },
     "require": {
-        "statamic/cms": "^v4.0"
+        "statamic/cms": "^v4.0|^v5.0"
     },
     "extra": {
         "statamic": {
