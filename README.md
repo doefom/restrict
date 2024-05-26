@@ -65,7 +65,7 @@ _Restrict_ works by overriding and rebinding some classes in the addon's Service
 ```php
 Statamic::repository(
     \Statamic\Contracts\Entries\EntryRepository::class,
-    \Doefom\Restrict\Contracts\Entries\EntryRepository::class
+    \Doefom\Restrict\Stache\Repositories\EntryRepository::class
 );
 
 $this->app->bind(

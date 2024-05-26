@@ -1,6 +1,6 @@
 <?php
 
-namespace Doefom\Restrict\Contracts\Entries;
+namespace Doefom\Restrict\Stache\Repositories;
 
 use Doefom\Restrict\Stache\Query\EntryQueryBuilder;
 use Statamic\Contracts\Entries\QueryBuilder;

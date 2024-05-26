@@ -2,6 +2,7 @@
 
 namespace Doefom\Restrict\Policies;
 
+use Doefom\Restrict\Facades\Restrict;
 use Statamic\Facades\User;
 use Statamic\Policies\EntryPolicy as StatamicEntryPolicy;
 
@@ -13,10 +14,10 @@ class EntryPolicy extends StatamicEntryPolicy
 
         $default = parent::view($user, $entry);
 
-        if ($this->hasAnotherAuthor($user, $entry)) {
-            return $default && $user->hasPermission("view other authors' {$entry->collectionHandle()} entries");
+        if (! Restrict::isRestricted($user)) {
+            return $default;
         }
 
-        return $default;
+        return $default && Restrict::isAuthorized($user, $entry);
     }
 }
