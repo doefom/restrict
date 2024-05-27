@@ -1,6 +1,6 @@
 {
     "name": "doefom/restrict",
-    "description": "Restrict is a Statamic addon that lets you choose from which collection a user can view other authors' entries.",
+    "description": "A Statamic addon that lets you define which entries should be listable to whom in the control panel by defining custom restriction logic.",
     "autoload": {
         "psr-4": {
             "Doefom\\Restrict\\": "src"
