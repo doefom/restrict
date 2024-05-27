@@ -46,6 +46,7 @@ return `true` if the user is allowed to view the given entry, and `false` otherw
 ### Basic Usage
 
 ```php
+use Doefom\Restrict\Facades\Restrict;
 use Statamic\Contracts\Auth\User;
 use Statamic\Contracts\Entries\Entry;
 
@@ -72,6 +73,9 @@ You can check for anything in your restriction closure. For example, you could d
 Statamic application and check for those:
 
 ```php
+use Doefom\Restrict\Facades\Restrict;
+use Statamic\Contracts\Auth\User;
+use Statamic\Contracts\Entries\Entry;
 use Statamic\Facades\Permission;
  
 public function boot()
@@ -99,7 +103,10 @@ public function boot()
 Or to manage restrictions on a per-collection basis:
 
 ```php
-use Statamic\Facades\Collection;
+use Doefom\Restrict\Facades\Restrict;
+use Statamic\Contracts\Auth\User;
+use Statamic\Contracts\Entries\Entry;
+use Statamic\Facades\Permission;
 
 public function boot()
 {
@@ -129,7 +136,9 @@ Let's say each user belongs to a company and each company has many jobs. You cou
 of the company they belong to:
 
 ```php
-use Statamic\Facades\Permission;
+use Doefom\Restrict\Facades\Restrict;
+use Statamic\Contracts\Auth\User;
+use Statamic\Contracts\Entries\Entry;
  
 public function boot()
 {
