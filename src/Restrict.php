@@ -2,13 +2,14 @@
 
 namespace Doefom\Restrict;
 
+use Closure;
 use Illuminate\Support\Facades\Route;
 use Statamic\Contracts\Auth\User;
 use Statamic\Contracts\Entries\Entry;
 
 class Restrict
 {
-    protected $callback;
+    protected Closure $callback;
 
     public function __construct()
     {
@@ -19,10 +20,8 @@ class Restrict
 
     /**
      * Set the restriction callback used to determine if the current user is authorized to view the entry.
-     * The callback expects a User and Entry instance and should return a boolean.
-     *
-     * @param callable $callback
-     * @return void
+     * The callback expects a User and Entry instance and should return true when the user is authorized
+     * to view the entry and false otherwise.
      */
     public function setRestriction(callable $callback): void
     {
@@ -31,10 +30,6 @@ class Restrict
 
     /**
      * Check if the current user is authorized to view the entry.
-     *
-     * @param User $user
-     * @param Entry $entry
-     * @return bool
      */
     public function isAuthorized(User $user, Entry $entry): bool
     {
@@ -44,9 +39,6 @@ class Restrict
     /**
      * Determine if the current user and route require restriction checks. Restriction
      * checks are only required for authenticated CP routes and non-super users.
-     *
-     * @param User|null $user
-     * @return bool
      */
     public function isRestricted(?User $user): bool
     {
@@ -56,8 +48,6 @@ class Restrict
     /**
      * Check if the current route is a CP route that requires authentication by checking
      * if the 'statamic.cp.authenticated' middleware is applied to the route.
-     *
-     * @return bool
      */
     protected function isAuthenticatedCpRoute(): bool
     {

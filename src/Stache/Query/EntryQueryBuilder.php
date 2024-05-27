@@ -8,7 +8,6 @@ use Statamic\Stache\Query\EntryQueryBuilder as StatamicEntryQueryBuilder;
 
 class EntryQueryBuilder extends StatamicEntryQueryBuilder
 {
-
     protected function getFilteredKeys()
     {
         $resKeys = parent::getFilteredKeys();
@@ -26,5 +25,4 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
             return Restrict::isAuthorized($user, $entry);
         });
     }
-
 }

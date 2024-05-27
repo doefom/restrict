@@ -5,7 +5,6 @@
 
 - ✅ Statamic v4
 - ✅ Statamic v5
-- ✅ Statamic API
 - ✅ Multisite
 - ❌ Eloquent Driver
 
@@ -13,19 +12,21 @@
 
 ## Features
 
-Prevent users from viewing other authors' entries unless they have been explicitly authorized to do so.
+Restrict entries from being listed in the control panel by the rules you define.
 
-### Conditions to view an entry
+## Upgrade Guide
 
-A user is able to view an entry when one of the following is true:
+### From 0.3.x to 0.4.x - What's Changed?
 
-- the user is a super admin
-- the field `author` of the entry matches the current user
-- the user's role has permission to `View other authors' entries` for the given collection
+In versions up to 0.3.x there were hard coded permissions to `view other authors' entries` on a per-collection basis.
+Those permissions are now removed and will no longer have any effect by default. To achieve the similar behavior as
+before, you could take a look at
+the ["Using Permissions on a Per-Collection Basis"](#using-permissions-on-a-per-collection-basis) section and fine tune
+it to your needs.
 
-### Important Note
-
-If your entry blueprint does not have an `author` field, the addon will have **no effect**.
+Also, make sure to check the `hasAnotherAuthor` function in Statamic's
+default [EntryPolicy on GitHub](https://github.com/statamic/cms/blob/46b4d39cc99f3be8a12cbb7958e3caf14b01a1ba/src/Policies/EntryPolicy.php#L108)
+to see how to properly check for another author in an entry.
 
 ## How to Install
 
@@ -38,20 +39,120 @@ composer require doefom/restrict
 
 ## How to Use
 
-### Default Behavior after Installation
+By default, the addon will not restrict anything. To restrict entries, set your restriction logic in
+your `AppServiceProvider.php` by providing a closure function that returns a boolean value. The function should
+return `true` if the user is allowed to view the given entry, and `false` otherwise.
 
-The addon behaves very similar to Statamic's default permission
-to `Edit other authors' entries` ([https://statamic.dev/users#author-permissions](https://statamic.dev/users#author-permissions)).
-It adds a new permission to each collection's permissions called `View other authors' entries`. After installing the
-addon, by default a user can only view entries they've created themselves.
+### Basic Usage
 
-### Giving a User Permission to View Other Authors' Entries
+```php
+use Statamic\Contracts\Auth\User;
+use Statamic\Contracts\Entries\Entry;
 
-To give a user permission to view other authors' entries, you need to assign the permission to the user's role. You can
-do this in the control panel by navigating to "Permissions", selecting the role you want to edit, and checking the
-permission `View other authors' entries` for the collection you want to give permission for.
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        // ...
+    }
+
+    public function boot(): void
+    {
+        Restrict::setRestriction(function (User $user, Entry $entry) {
+            // Can view own entries only 
+            return $entry->authors()->contains($user->id());
+        });
+    }
+}
+```
+
+### Using Permissions
+
+You can check for anything in your restriction closure. For example, you could define custom permissions in your
+Statamic application and check for those:
+
+```php
+use Statamic\Facades\Permission;
+ 
+public function boot()
+{
+    // Add one general permission to Statamic 
+    Permission::extend(function () {
+        Permission::register('view entries without restriction')
+            ->label('View entries without restriction');
+    });
+
+    Restrict::setRestriction(function (User $user, Entry $entry) {
+        if ($user->hasPermission('view entries without restriction')) {
+            // Can view all entries
+            return true;
+        }
+
+        // Can view own entries only
+        return $entry->authors()->contains($user->id());
+    });
+}
+```
+
+### Using Permissions on a Per-Collection Basis
+
+Or to manage restrictions on a per-collection basis:
+
+```php
+use Statamic\Facades\Collection;
+
+public function boot()
+{
+    // Add one permission per collection 
+    Permission::extend(function () {
+        Permission::get('view {collection} entries')->addChild(
+            Permission::make("view {collection} entries without restriction")
+                ->label("View entries without restriction")
+        );
+    });
+    
+    Restrict::setRestriction(function (User $user, Entry $entry) {
+        if ($user->hasPermission("view {$entry->collectionHandle()} entries without restriction")) {
+            // Can view all entries in the entry's collection
+            return true;
+        }
+        
+        // Can view own entries only
+        return $entry->authors()->contains($user->id());
+    });
+}
+```
+
+### Advanced Usage
+
+Let's say each user belongs to a company and each company has many jobs. You could make sure a user can only see jobs
+of the company they belong to:
+
+```php
+use Statamic\Facades\Permission;
+ 
+public function boot()
+{
+    Restrict::setRestriction(function (User $user, Entry $entry) {
+        if ($entry->collectionHandle() !== 'jobs') {
+            // Allow viewing all entries of collections other than 'jobs'
+            return true;
+        }
+        
+        // Can view jobs of own company only
+        return $user->get('company') === $entry->get('company');
+    });
+}
+```
 
 ## Caveats
+
+### Works with Control Panel Routes Only
+
+The addon only restricts entries from being listed in the control panel and therefore does not restrict entries from
+being displayed on the front-end of your site or fetched from your API, that's entirely up to you. To know if the user
+is currently on a control panel route we check if the route has the `statamic.cp.authenticated` middleware applied. If
+so, restrict will do its thing. If not, there won't be any restrictions applied.
 
 ### Eloquent Driver
 

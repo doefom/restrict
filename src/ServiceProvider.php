@@ -9,7 +9,7 @@ class ServiceProvider extends AddonServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('restrict', fn() => new Restrict);
+        $this->app->singleton('restrict', fn () => new Restrict);
     }
 
     public function bootAddon(): void

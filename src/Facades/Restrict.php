@@ -9,10 +9,8 @@ use Illuminate\Support\Facades\Facade;
  */
 class Restrict extends Facade
 {
-
     protected static function getFacadeAccessor(): string
     {
         return 'restrict';
     }
-
 }
