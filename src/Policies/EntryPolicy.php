@@ -14,7 +14,7 @@ class EntryPolicy extends StatamicEntryPolicy
 
         $default = parent::view($user, $entry);
 
-        if (! Restrict::isRestricted($user)) {
+        if (! Restrict::shouldApplyRestriction($user)) {
             return $default;
         }
 
