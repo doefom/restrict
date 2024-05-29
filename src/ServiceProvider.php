@@ -3,7 +3,6 @@
 namespace Doefom\Restrict;
 
 use Statamic\Providers\AddonServiceProvider;
-use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -14,9 +13,8 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon(): void
     {
-        Statamic::repository(
-            \Statamic\Contracts\Entries\EntryRepository::class,
-            \Doefom\Restrict\Stache\Repositories\EntryRepository::class
-        );
+        $this->app->bind(\Statamic\Stache\Query\EntryQueryBuilder::class, function ($app) {
+            return new \Doefom\Restrict\Stache\Query\EntryQueryBuilder($app['stache']->store('entries'));
+        });
     }
 }
