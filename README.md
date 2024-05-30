@@ -1,7 +1,7 @@
 # Restrict
 
-> Restrict is a Statamic addon that lets you choose which user can view other authors' entries of a given collection in
-> the control panel.
+> A Statamic addon that lets you define which entries should be listable to whom in the control panel by defining custom
+> restriction logic.
 
 - ✅ Statamic v4
 - ✅ Statamic v5
