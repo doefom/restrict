@@ -21,6 +21,11 @@ class EntryQueryBuilder extends StatamicEntryQueryBuilder
 
         $entryPolicy = app(EntryPolicy::class);
 
+        if (get_class($entryPolicy) === EntryPolicy::class) {
+            // No custom policy is defined, so we don't need to filter the keys.
+            return $resKeys;
+        }
+
         return $resKeys->filter(function ($key) use ($user, $entryPolicy) {
             $entry = $this->store->getItem($key);
 

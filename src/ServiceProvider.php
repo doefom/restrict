@@ -17,28 +17,6 @@ class ServiceProvider extends AddonServiceProvider
     public function bootAddon(): void
     {
         // ------------------------------------------------------------------------------------
-        // Register the config file
-        // ------------------------------------------------------------------------------------
-
-        $this->publishes([
-            __DIR__.'/../config/restrict.php' => config_path('restrict.php'),
-        ], 'restrict-config');
-
-        // ------------------------------------------------------------------------------------
-        // Try to bind the configured policy
-        // ------------------------------------------------------------------------------------
-
-        $entryPolicy = config('restrict.entry_policy');
-
-        if (! $entryPolicy) {
-            Log::warning('Restrict addon (doefom/restrict) is installed but no entry policy is configured. Please configure an entry policy in the restrict.php config file.');
-
-            return;
-        }
-
-        $this->app->bind(EntryPolicy::class, $entryPolicy);
-
-        // ------------------------------------------------------------------------------------
         // Bind the entry query builder
         // ------------------------------------------------------------------------------------
 
