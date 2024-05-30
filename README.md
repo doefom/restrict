@@ -1,7 +1,6 @@
 # Restrict
 
-> A Statamic addon that lets you define which entries should be listable to whom in the control panel by defining custom
-> restriction logic.
+> A Statamic addon that applies your EntryPolicy's `view` method to entry listings in the control panel.
 
 - ✅ Statamic v4
 - ✅ Statamic v5
@@ -12,7 +11,7 @@
 
 ## Features
 
-Prevent entries from showing up in the control panel based on the restrictions you define.
+Prevent entries from showing up in the control panel based on the `EntryPolicy` you define.
 
 ## Upgrade Guide
 
