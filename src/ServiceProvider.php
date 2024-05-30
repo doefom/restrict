@@ -3,8 +3,6 @@
 namespace Doefom\Restrict;
 
 use Doefom\Restrict\Stache\Query\EntryQueryBuilder;
-use Illuminate\Support\Facades\Log;
-use Statamic\Policies\EntryPolicy;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider

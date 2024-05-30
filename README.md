@@ -54,14 +54,7 @@ Now you have to set your restrictions as explained in the [Getting Started](#get
 ### From 0.3.x to 0.4.x
 
 In versions up to 0.3.x there were hard coded permissions to `view other authors' entries` on a per-collection basis.
-Those permissions are now removed and will no longer have any effect by default. To achieve the similar behavior as
-before, you could take a look at
-the ["Using Permissions on a Per-Collection Basis"](#using-permissions-on-a-per-collection-basis) section and fine tune
-it to your needs.
-
-Also, make sure to check the `hasAnotherAuthor` function in Statamic's
-default [EntryPolicy on GitHub](https://github.com/statamic/cms/blob/46b4d39cc99f3be8a12cbb7958e3caf14b01a1ba/src/Policies/EntryPolicy.php#L108)
-to see how to properly check for another author in an entry.
+Those permissions are now removed and will no longer have any effect by default.
 
 ## Getting Started
 
@@ -74,24 +67,17 @@ run the following command from your project root:
 composer require doefom/restrict
 ```
 
-### Publish the Configuration File
-
-```shell
-php artisan vendor:publish --tag=restrict-config
-```
-
 ### Create a Custom Entry Policy
 
-Your custom entry policy should extend the default `Statamic\Policies\EntryPolicy` and override its `view` method. This
-method will be called to determine if an entry is listed in the control panel or not.
+To properly use this addon it's best to create a custom entry policy. **Make sure it extends the
+default** `Statamic\Policies\EntryPolicy` and overrides its `view` method. This method will be called to determine if an
+entry is listed in the control panel or not.
 
-**Hint:** You can create a custom policy by running:
+**Tip:** You can create a custom policy by running:
 
 ```shell
 php artisan make:policy MyEntryPolicy
 ```
-
-**Important:** Ensure your custom policy extends the `Statamic\Policies\EntryPolicy`.
 
 Here is what `MyEntryPolicy` could look like:
 
@@ -115,19 +101,38 @@ class MyEntryPolicy extends EntryPolicy
 
 ### Register Your Custom Entry Policy
 
-After running the publish command you should see the `config/restrict.php` configuration file. Adjust the `entry_policy`
-key by providing the class name of your custom entry policy.
+Make sure to register your custom entry policy in your `AppServiceProvider`:
 
 ```php
-<?php
+use Illuminate\Support\ServiceProvider;
 
-return [
-    'entry_policy' => \App\Policies\MyEntryPolicy::class,
-];
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        $this->app->bind(
+            \Statamic\Policies\EntryPolicy::class,
+            \App\Policies\MyEntryPolicy::class
+        );
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        // ...
+    }
+}
+
 ```
 
 And that's it! From now on, the `view` method of your custom entry policy will be called to determine if an entry should
-be listed in the control panel or not.
+be listed in the control panel or not. Your changes will also have an effect on the detail view of an entry and return
+a `403` if the user is not allowed to view the entry.
 
 ## Usage Examples
 
@@ -175,6 +180,17 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
 
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        // ...
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
         // Add one general permission to Statamic 
@@ -225,6 +241,17 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
 
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        // ...
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
         // Add one permission per collection 
@@ -278,18 +305,25 @@ planned to support the Eloquent driver in the future.
 
 ### Class Bindings
 
-_Restrict_ works by rebinding the Query Builder and the Entry Policy classes. This is done in the `ServiceProvider` of
-the addon. If you were to use custom bindings or another addon which also rebinds one of those classes, you might run
-into issues. That's just something to keep in mind when using this addon.
+_Restrict_ works by rebinding Statamic's `EntryQueryBuilder` and `EntryPolicy` (this one is done by you). If you were to
+use custom bindings or another addon which also rebinds one of those classes, you might run into issues. That's just
+something to keep in mind when using this addon.
 
 ```php
-// Rebinding the Entry Policy
+// ----------------------------------------------------------------
+// Rebinding the Entry Policy in your AppServiceProvider
+// ----------------------------------------------------------------
+
 $this->app->bind(
     \Statamic\Policies\EntryPolicy::class,
-    // Your custom entry policy as set in /config/restrict.php
+    \App\Policies\MyEntryPolicy::class
 );
 
-// Rebinding the Entry Query Builder
+// ----------------------------------------------------------------
+// Rebinding the Entry Query Builder as done
+// by the addon in its ServiceProvider.
+// ----------------------------------------------------------------
+
 $this->app->bind(\Statamic\Stache\Query\EntryQueryBuilder::class, function ($app) {
     return new \Doefom\Restrict\Stache\Query\EntryQueryBuilder($app['stache']->store('entries'));
 });
