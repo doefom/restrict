@@ -2,7 +2,7 @@
 
 namespace Doefom\Restrict\Stache\Query;
 
-use Doefom\Restrict\Facades\Restrict;
+use Doefom\Restrict\Restrict;
 use Statamic\Facades\User;
 use Statamic\Policies\EntryPolicy;
 use Statamic\Stache\Query\EntryQueryBuilder as StatamicEntryQueryBuilder;

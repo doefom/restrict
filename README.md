@@ -320,7 +320,7 @@ $this->app->bind(
 
 // ----------------------------------------------------------------
 // Rebinding the Entry Query Builder as done
-// by the addon in its ServiceProvider.
+// by the Restrict addon in its ServiceProvider.
 // ----------------------------------------------------------------
 
 $this->app->bind(\Statamic\Stache\Query\EntryQueryBuilder::class, function ($app) {

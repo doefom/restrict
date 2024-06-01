@@ -7,11 +7,6 @@ use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    public function register(): void
-    {
-        $this->app->singleton('restrict', fn () => new Restrict);
-    }
-
     public function bootAddon(): void
     {
         // ------------------------------------------------------------------------------------
