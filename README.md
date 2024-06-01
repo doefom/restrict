@@ -297,6 +297,24 @@ The addon only restricts entries from being listed in the control panel and ther
 being displayed on the front-end of your site or fetched from your API, that's entirely up to you. To know if the user
 is currently on a control panel route we check if the route has the `statamic.cp.authenticated` middleware applied.
 
+### App Running in Console
+
+If you run your app in the console, the addon will not have any effect.
+
+```php
+class ServiceProvider extends AddonServiceProvider
+{
+    public function bootAddon(): void
+    {
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
+        // ...
+    }
+}
+```
+
 ### Eloquent Driver
 
 This addon does **not** work with the Eloquent driver. It only works with the default flat file driver. However, it is
