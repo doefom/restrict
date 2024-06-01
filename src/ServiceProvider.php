@@ -9,6 +9,10 @@ class ServiceProvider extends AddonServiceProvider
 {
     public function bootAddon(): void
     {
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
         // ------------------------------------------------------------------------------------
         // Bind the entry query builder
         // ------------------------------------------------------------------------------------
