@@ -13,6 +13,6 @@ class Restrict
      */
     public static function shouldApplyRestriction(?User $user): bool
     {
-        return Statamic::isCpRoute() && $user && ! $user->isSuper();
+        return Statamic::isCpRoute() && $user?->isSuper() === false;
     }
 }
